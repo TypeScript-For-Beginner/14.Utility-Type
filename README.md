@@ -1,5 +1,5 @@
 # 14장 Utility Type
----
+
 유틸리티 타입은 정의해 놓은 타입을 변환할 때 사용하기 좋은 TypeScript가 제공하는 도구이다. 유틸리티 타입을 쓰지 않더라도 기본 문법으로 타입을 변환할 수 있지만 유틸리티 타입을 사용하면 좀 더 간결하게 타입을 변환할 수 있다.
 
 ## 14.1 Partial&lt;Type&gt;
@@ -71,6 +71,46 @@ let typescript: Required<Book> = {
 ```
 
 ## 14.3 Readonly&lt;Type&gt;
-`Type` 집합의 모든 프로퍼티를 `읽기 전용(Readonly)` 으로 설정한 타입을 생성한다.
+`Type` 집합의 모든 프로퍼티를 재할당이 불가능한 `읽기 전용(Readonly)` 으로 설정한 타입을 생성한다.
+
+`읽기 전용(Readonly)`가 아니면 재할당이 가능하다.
+
+```typescript
+interface Book {
+  title: string;
+  description: string;
+  author?: string;
+  publisher?: string;
+}
+
+let typescript: Book = {
+  title: "알잘딱깔센 TypeScript",
+  description: "타입스크립트 입문자가 읽으면 좋은 책",
+};
+
+typescript.title = "TypeScript Basic"; // 재할당 가능
+```
+
+하지만 `Readonly<Type>`을 준다면 모든 프로퍼티가 `읽기 전용(Readonly)`이 되면서 재할당이 불가능하게 된다.
+
+```typescript
+interface Book {
+  // Readonly<Type> 사용시
+
+  title: string; // => readonly title: string;
+  description: string; // => readonly description: string;
+  author?: string; // => readonly author?: string;
+  publisher?: string; // => readonly publisher?: string;
+
+  // 모든 프로퍼티 앞에 readonly 값이 붙은 interface가 나온다고 생각하면 된다.
+}
+
+let typescript: Readonly<Book> = {
+  title: "알잘딱깔센 TypeScript",
+  description: "타입스크립트 입문자가 읽으면 좋은 책",
+};
+
+typescript.title = "TypeScript Basic"; // 재할당 불가능
+```
 
 
