@@ -153,8 +153,12 @@ const food: Food = {
 예제 14-7을 보면 value 값의 반복이 보인다. 이를 `Record<Keys,Type>`을 활용하면 해결할 수 있다.
 
 예제 14-8
+
 ```typescript
-const food: Record<"1팀"|"2팀"|"3팀"|"4팀", "피자"|"치킨"|"햄버거"|"컵라면"> = {
+const food: Record<
+  "1팀" | "2팀" | "3팀" | "4팀",
+  "피자" | "치킨" | "햄버거" | "컵라면"
+> = {
   "1팀": "피자",
   "2팀": "치킨",
   "3팀": "햄버거",
@@ -165,9 +169,10 @@ const food: Record<"1팀"|"2팀"|"3팀"|"4팀", "피자"|"치킨"|"햄버거"|"�
 훨씬 간결해진 모습이지만 조금 길어 보인다. 이를 `type`을 활용해 정리해 줄 수 있다.
 
 예제 14-8
+
 ```typescript
-type Team = "1팀"|"2팀"|"3팀"|"4팀";
-type Food = "피자"|"치킨"|"햄버거"|"컵라면";
+type Team = "1팀" | "2팀" | "3팀" | "4팀";
+type Food = "피자" | "치킨" | "햄버거" | "컵라면";
 
 const food: Record<Team, Food> = {
   "1팀": "피자",
@@ -177,4 +182,119 @@ const food: Record<Team, Food> = {
 };
 ```
 
-`type`을 활용해 정리해 주면 조금 더 명시적인 코드 작성이 가능하다.
+`type`을 활용해 정리해 주면 재사용에 용이하다.
+
+### 14.5 Pick<Type, Keys>
+
+`Type`에서 프로퍼티 `Keys`를 `Pick`(선택)해 타입을 생성한다.
+
+아래 예제는 `Person`에서 name과 age를 선택해 kim을 생성한다.
+예제 14-9
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  location: string;
+  gender: "M" | "W";
+}
+
+const kim: Pick<Person, "name" | "age"> = {
+  name: "Kim",
+  age: 27,
+};
+```
+
+만약 name과 age가 아닌 다른 key를 선택하게 되면 에러가 발생한다.
+예제 14-10
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  location: string;
+  gender: "M" | "W";
+}
+
+const kim: Pick<Person, "name" | "age"> = {
+  name: "Kim",
+  location: "Jeju", // Error: Type '{ name: string; location: string; }' is not assignable to type 'Pick<Person, "name" | "age">'
+```
+
+`Pick<Type,Keys>` 유틸리티 역시 `type`을 사용해 정리할 수 있다.
+예제 14-11
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  location: string;
+  gender: "M" | "W";
+}
+
+type Kim = Pick<Person, "name" | "age">;
+
+const kim: Kim = {
+  name: "Kim",
+  age: 27,
+};
+```
+
+### 14.5 Omit<Type, Keys>
+
+`Pick` 유틸리티 타입과는 반대 개념으로
+`Type`에서 프로퍼티 `Keys`를 `Omit`(생략)해 타입을 생성한다.
+
+아래 예제는 `Person`에서 age와 gender를 생략해 kim을 생성한다.
+예제 14-12
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  location: string;
+  gender: "M" | "W";
+}
+
+const kim: Omit<Person, "age" | "gender"> = {
+  name: "Kim",
+  location: "Jeju",
+};
+```
+
+만약 age나 gender를 포함하게 되면 에러가 발생한다.
+예제 14-13
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  location: string;
+  gender: "M" | "W";
+}
+
+const kim: Omit<Person, "age" | "gender"> = {
+  name: "Kim",
+  location: "Jeju",
+  gender: "M", // Error: Type '{ name: string; location: string; gender: string; }' is not assignable to type 'Omit<Person, "age" | "gender">'
+};
+```
+
+`Omit<Type,Keys>` 유틸리티 역시 `type`을 사용해 정리할 수 있다.
+예제 14-14
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  location: string;
+  gender: "M" | "W";
+}
+
+type Kim = Omit<Person, "age" | "gender">;
+
+const kim: Kim = {
+  name: "Kim",
+  location: "Jeju",
+};
+```
