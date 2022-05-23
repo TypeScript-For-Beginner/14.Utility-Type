@@ -298,3 +298,45 @@ const kim: Kim = {
   location: "Jeju",
 };
 ```
+
+### 14.5 Exclude<Type, ExcludeUnion>
+
+`ExcludeUnion`에 들어갈 수 있는 모든 유니온을 `Type`에서 제외한 타입을 생성한다.
+
+예제 14-15
+
+```typescript
+type T1 = Exclude<"kim" | "lee" | "park", "park">;
+// result : type T1 = "kim" | "lee"
+
+type T2 = Exclude<string | number | boolean, number | boolean>;
+// result : type T2 = string
+```
+
+예제 14-15를 보면 `type` T1에서 "park" 을 제외한 "kim" | "lee"가 남게 된다.
+`type` T2 역시 number와 boolean 을 제외한 string이 남게 된다.
+
+예제 14-16
+
+```typescript
+type T1 = Exclude<string | number | boolean, number>;
+// result : type T1 = string | boolean
+
+type T2 = Exclude<T1, boolean>;
+// result : type T2 = string
+```
+
+예제 14-16 처럼 사용할 수도 있다.
+
+### 14.6 NonNullable<Type>
+
+`Type`에서 `null`과 `undefined`를 제외하고 타입을 생성한다.
+
+예제 14-17
+
+```typescript
+type T1 = NonNullable<string | number | boolean | null | undefined>;
+// result : type T1 = string | number | boolean
+```
+
+T1 에서 null과 undefined을 제외한 string과 number, boolean이 남게 된다.
